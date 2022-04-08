@@ -9,9 +9,10 @@ enum TypeReading {
 
 export interface ProgressEventLike<T> {
   readonly lengthComputable: boolean;
-    readonly loaded: number;
-    readonly total: number;
-    readonly result: T;
+  readonly loaded: number;
+  readonly total: number;
+  readonly completed: boolean;
+  readonly result: T;
 }
 
 export class RxFileReader {
@@ -40,7 +41,8 @@ export class RxFileReader {
           const event: ProgressEventLike<T> = {
             lengthComputable: e.lengthComputable,
             loaded: e.loaded,
-            total: e.loaded,
+            total: e.total,
+            completed: true,
             result: e.target.result as any
           }
   
@@ -59,35 +61,24 @@ export class RxFileReader {
       fileReader.addEventListener('load', callbackLoad, {once: true});
       fileReader.addEventListener('error', callbackError, {once: true});
 
-      if (observeProgress) {
-        const callbackStart = (e: ProgressEvent<FileReader>) => {
-          const event: ProgressEventLike<T> = {
-            lengthComputable: e.lengthComputable,
-            loaded: e.loaded,
-            total: e.loaded,
-            result: undefined
-          }
-
-          subscriber.next(event);
-        };
-
-        fileReader.addEventListener('start', callbackStart);
-
+      if (observeProgress) {        
         const callbackProgress = (e: ProgressEvent<FileReader>) => {
           const event: ProgressEventLike<T> = {
             lengthComputable: e.lengthComputable,
             loaded: e.loaded,
-            total: e.loaded,
+            total: e.total,
+            completed: e.total === e.loaded,
             result: undefined
           }
-
+          
           subscriber.next(event);
         };
-
+        
+        fileReader.addEventListener('start', callbackProgress, {once: true});
         fileReader.addEventListener('progress', callbackProgress);
 
         subscriber.add(() => {
-          fileReader.removeEventListener('start', callbackStart);
+          fileReader.removeEventListener('start', callbackProgress);
           fileReader.removeEventListener('progress', callbackProgress);
         });
       }
