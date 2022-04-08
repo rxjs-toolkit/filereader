@@ -17,22 +17,22 @@ export interface ProgressEventLike<T> {
 
 export class RxFileReader {
   public static readAsDataURL<P extends true | false = false>(blob: Blob, observeProgress?: P) {
-    return RxFileReader.#readAs<string, P>(TypeReading.DataURL, blob, observeProgress);
+    return RxFileReader._readAs<string, P>(TypeReading.DataURL, blob, observeProgress);
   }
 
   public static readAsBinaryString<P extends true | false = false>(blob: Blob, observeProgress?: P) {
-    return RxFileReader.#readAs<string, P>(TypeReading.BinaryString, blob, observeProgress);
+    return RxFileReader._readAs<string, P>(TypeReading.BinaryString, blob, observeProgress);
   }
 
   public static readAsText<P extends true | false = false>(blob: Blob, observeProgress?: P) {
-    return RxFileReader.#readAs<string, P>(TypeReading.Text, blob, observeProgress);
+    return RxFileReader._readAs<string, P>(TypeReading.Text, blob, observeProgress);
   }
 
   public static readAsArrayBuffer<P extends true | false = false>(blob: Blob, observeProgress?: P) {
-    return RxFileReader.#readAs<ArrayBuffer, P>(TypeReading.ArrayBuffer, blob, observeProgress);
+    return RxFileReader._readAs<ArrayBuffer, P>(TypeReading.ArrayBuffer, blob, observeProgress);
   }
 
-  static #readAs<T, P extends true | false>(typeReading: TypeReading, blob: Blob, observeProgress?: P): Observable<P extends false ? T : ProgressEventLike<T>> {
+  private static _readAs<T, P extends true | false>(typeReading: TypeReading, blob: Blob, observeProgress?: P): Observable<P extends false ? T : ProgressEventLike<T>> {
     return new Observable<any>(subscriber => {
       const fileReader = new FileReader();
 
