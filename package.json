@@ -1,5 +1,5 @@
 {
-  "name": "rxjs-filereader",
+  "name": "@rxjs-toolkit/filereader",
   "version": "0.1.2",
   "repository": "git+https://github.com/rxjs-toolkit/filereader.git",
   "author": "Lucas Dornelas",
@@ -34,8 +34,7 @@
     "build:esm": "tsc --project tsconfig.esm.json",
     "build:umd": "tsc --project tsconfig.umd.json",
     "test": "jest",
-    "clean": "rimraf dist && rimraf node_modules/.cache",
-    "prepublishOnly": "npm login --access=public && npm run build"
+    "clean": "rimraf dist && rimraf node_modules/.cache"
   },
   "devDependencies": {
     "@homer0/prettier-plugin-jsdoc": "^8.0.0",
